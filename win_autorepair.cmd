@@ -11,10 +11,25 @@ CHCP
 CD /D "%root_path%"
 ECHO ******************
 
+@REM SFC
+SFC /?
+ECHO ***
 SFC /SCANNOW
+
+@REM DISM
+ECHO ***
+@REM For PowerShell: Repair-WindowsImage -Online -RestoreHealth
+DISM /?
+ECHO ***
+DISM /Online /Cleanup-image /CheckHealth
+ECHO ***
 DISM /Online /Cleanup-image /ScanHealth
+ECHO ***
 DISM /Online /Cleanup-image /RestoreHealth
-CHKDSK "%SystemDrive%\" /F /R /scan /offlinescanandfix
+
+@REM CHKDSK
+ECHO ***
+CHKDSK "%SystemDrive%" /F /R /offlinescanandfix
 
 ECHO ******************
 ECHO Done working.
