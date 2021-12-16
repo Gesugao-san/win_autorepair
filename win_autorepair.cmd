@@ -79,11 +79,12 @@ FOR /F "skip=1 tokens=1 delims= " %%a IN ('WMIC.exe LOGICALDISK GET "Caption"') 
     
     ECHO ******************
     ECHO DISM
-    DISM.exe /Online /Cleanup-Image /CheckHealth /LogLevel:4 /ScratchDir:"%root_disk%:\" /Image:"%SystemDrive%:\" /LogPath:"%root_disk%:\DISM_Check.log"
+    @REM DISM.exe /Online /Cleanup-Image /CheckHealth ...
+    DISM.exe /Cleanup-Image /CheckHealth /LogLevel:4 /ScratchDir:"%root_disk%:\" /Image:"%SystemDrive%:\" /LogPath:"%root_disk%:\DISM_Check.log"
     ECHO ***
-    DISM.exe /Online /Cleanup-Image /ScanHealth /LogLevel:4 /ScratchDir:"%root_disk%:\" /Image:"%SystemDrive%:\" /LogPath:"%root_disk%:\DISM_Scan.log"
+    DISM.exe /Cleanup-Image /ScanHealth /LogLevel:4 /ScratchDir:"%root_disk%:\" /Image:"%SystemDrive%:\" /LogPath:"%root_disk%:\DISM_Scan.log"
     ECHO ***
-    DISM.exe /Online /Cleanup-Image /RestoreHealth /LogLevel:4 /ScratchDir:"%root_disk%:\" /Image:"%SystemDrive%:\" /LogPath:"%root_disk%:\DISM_Restore.log"
+    DISM.exe /Cleanup-Image /RestoreHealth /LogLevel:4 /ScratchDir:"%root_disk%:\" /Image:"%SystemDrive%:\" /LogPath:"%root_disk%:\DISM_Restore.log"
     
     @REM For PowerShell: Repair-WindowsImage -Online -CheckHealth
     @REM DISM.exe /?
