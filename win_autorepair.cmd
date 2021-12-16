@@ -44,7 +44,7 @@ FOR /F "skip=1 tokens=1 delims= " %%a IN ('WMIC.exe LOGICALDISK GET "Caption"') 
     SET /a count=%count%+1
     SET "labels_used=!labels_used!%%a\%delimiter%"
     SET "labels_free=!labels_free:%%a =!"
-    CHKDSK.exe "%SystemDrive%:\" /F /R /offlinescanandfix
+    CHKDSK.exe "%SystemDrive%:\" /F /R /OfflineScanAndFix
     
     @REM SFC (part 1)
     SFC.exe /SCANFILE="%SystemDrive%:\windows\system32\kernel32.dll" /OFFBOOTDIR="%SystemDrive%:\" /OFFWINDIR="%SystemDrive%:\windows\" /OFFLOGFILE="%root_disk%:\SFC.log"
