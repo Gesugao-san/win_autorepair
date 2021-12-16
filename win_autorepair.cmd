@@ -67,6 +67,7 @@ SET labels
 
 ECHO ******************
 ECHO BootRec (WinRE only!)
+@REM Diskpart Assign=Z
 BootRec.exe /ScanOS > "%root_disk%:\BootRec.log" | TYPE "%root_disk%:\BootRec.log"
 ECHO ***
 BootRec.exe /FixMBR /FixBoot /RebuildBCD >> "%root_disk%:\BootRec.log" | TYPE "%root_disk%:\BootRec.log"
