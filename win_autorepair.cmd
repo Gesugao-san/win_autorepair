@@ -26,7 +26,7 @@ SFC.exe /VERIFYONLY /OFFLOGFILE="%root_disk%:\SFC.log"
 ECHO ***
 SFC.exe /SCANNOW /OFFLOGFILE="%root_disk%:\SFC.log"
 ECHO ***
-NOTEPAD.exe %WINDIR%\Logs\CBS\CBS.log
+NOTEPAD.exe "%WINDIR%\Logs\CBS\CBS.log"
 
 
 @REM CHKDSK
@@ -60,6 +60,7 @@ FOR /F "skip=1 tokens=1 delims= " %%a IN ('WMIC.exe LOGICALDISK GET "Caption"') 
     DISM.exe /Online /Cleanup-Image /ScanHealth /LogLevel:4 /ScratchDir:"%root_disk%:\" /Image:"%SystemDrive%:\" /LogPath:"%root_disk%:\DISM_Scan.log"
     ECHO ***
     DISM.exe /Online /Cleanup-Image /RestoreHealth /LogLevel:4 /ScratchDir:"%root_disk%:\" /Image:"%SystemDrive%:\" /LogPath:"%root_disk%:\DISM_Restore.log"
+    @REM NOTEPAD.exe "%WINDIR%\Logs\DISM\dism.log"
 )
 SET labels_used=%labels_used:~0,-8%
 SET labels
