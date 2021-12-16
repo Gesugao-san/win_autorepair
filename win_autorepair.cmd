@@ -13,25 +13,24 @@ ECHO PATH: %PATH%
 CD /D "%root_path%"
 ECHO ******************
 
+ECHO Windows Recovery Environment (WinRE) info
+reagentc.exe /info > "%root_disk%:\reagentc.log" | TYPE "%root_disk%:\reagentc.log"
 ECHO ***
-@REM Windows Recovery Environment (WinRE) info
-reagentc.exe /info
-ECHO ***
-reagentc.exe /enable
+reagentc.exe /enable >> "%root_disk%:\reagentc.log" | TYPE "%root_disk%:\reagentc.log"
 
-@REM SFC (part 1)
+ECHO ******************
+ECHO SFC (part 1)
 SFC /?
 ECHO ***
-SFC.exe /VERIFYONLY /OFFLOGFILE="%root_disk%:\SFC.log"
+SFC.exe /VERIFYONLY
 ECHO ***
-SFC.exe /SCANNOW /OFFLOGFILE="%root_disk%:\SFC.log"
+SFC.exe /SCANNOW
 ECHO ***
 NOTEPAD.exe "%WINDIR%\Logs\CBS\CBS.log"
 
 
-@REM CHKDSK
-ECHO ***
-
+ECHO ******************
+ECHO CHKDSK
 ENDLOCAL && SETLOCAL ENABLEDELAYEDEXPANSION
 @REM https://serverfault.com/a/268814
 SET /a count=1
@@ -46,30 +45,31 @@ FOR /F "skip=1 tokens=1 delims= " %%a IN ('WMIC.exe LOGICALDISK GET "Caption"') 
     SET "labels_free=!labels_free:%%a =!"
     CHKDSK.exe "%SystemDrive%:\" /F /R /OfflineScanAndFix
     
-    @REM SFC (part 1)
+    ECHO ***
+    ECHO SFC (part 1)
     SFC.exe /SCANFILE="%SystemDrive%:\windows\system32\kernel32.dll" /OFFBOOTDIR="%SystemDrive%:\" /OFFWINDIR="%SystemDrive%:\windows\" /OFFLOGFILE="%root_disk%:\SFC.log"
     SFC.exe /SCANFILE="%SystemDrive%:\windows\system32\winload.efi" /OFFBOOTDIR="%SystemDrive%:\" /OFFWINDIR="%SystemDrive%:\windows\" /OFFLOGFILE="%root_disk%:\SFC.log"
     
-    @REM DISM
-    ECHO ***
-    @REM For PowerShell: Repair-WindowsImage -Online -RestoreHealth
-    DISM.exe /?
-    ECHO ***
+    ECHO ******************
+    ECHO DISM
     DISM.exe /Online /Cleanup-Image /CheckHealth /LogLevel:4 /ScratchDir:"%root_disk%:\" /Image:"%SystemDrive%:\" /LogPath:"%root_disk%:\DISM_Check.log"
     ECHO ***
     DISM.exe /Online /Cleanup-Image /ScanHealth /LogLevel:4 /ScratchDir:"%root_disk%:\" /Image:"%SystemDrive%:\" /LogPath:"%root_disk%:\DISM_Scan.log"
     ECHO ***
     DISM.exe /Online /Cleanup-Image /RestoreHealth /LogLevel:4 /ScratchDir:"%root_disk%:\" /Image:"%SystemDrive%:\" /LogPath:"%root_disk%:\DISM_Restore.log"
+    
+    @REM For PowerShell: Repair-WindowsImage -Online -CheckHealth
+    @REM DISM.exe /?
     @REM NOTEPAD.exe "%WINDIR%\Logs\DISM\dism.log"
 )
 SET labels_used=%labels_used:~0,-8%
 SET labels
 
+ECHO ******************
+ECHO BootRec (WinRE only!)
+BootRec.exe /ScanOS > "%root_disk%:\BootRec.log" | TYPE "%root_disk%:\BootRec.log"
 ECHO ***
-@REM BootRec (WinRE only!)
-BootRec.exe /ScanOS
-ECHO ***
-BootRec.exe /FixMBR /FixBoot /RebuildBCD
+BootRec.exe /FixMBR /FixBoot /RebuildBCD >> "%root_disk%:\BootRec.log" | TYPE "%root_disk%:\BootRec.log"
 
 ECHO ******************
 ECHO Done working.
