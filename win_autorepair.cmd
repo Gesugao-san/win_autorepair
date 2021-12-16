@@ -1,23 +1,49 @@
 
 @ECHO OFF
+:START
 CLS
 SETLOCAL ENABLEDELAYEDEXPANSION DISABLEDELAYEDEXPANSION
 SET root_disk=%~d0
 SET root_path=%~dp0
 
 ECHO This script will help you with OS repairing.
+GOTO INFO
 
+:INFO
 ECHO Start working...
 CHCP
 ECHO PATH: %PATH%
 CD /D "%root_path%"
-ECHO ******************
+GOTO DiskPart
 
+:DiskPart
+GOTO WinRE
+
+@REM Can be broken below, passing
+ECHO ******************
+ECHO DiskPart info > "%root_disk%:\DiskPart.log" | TYPE "%root_disk%:\reagentc.log"
+DISKPART
+LIST DISK
+SELECT DISK 1
+DETAIL DISK
+LIST VOLUME
+SELECT VOLUME "C:\"
+DETAIL VOLUME
+LIST PARTITION
+SELECT PARTITION "1"
+DETAIL PARTITION
+EXIT
+GOTO WinRE
+
+:WinRE
+ECHO ******************
 ECHO Windows Recovery Environment (WinRE) info
 reagentc.exe /info > "%root_disk%:\reagentc.log" | TYPE "%root_disk%:\reagentc.log"
 ECHO ***
 reagentc.exe /enable >> "%root_disk%:\reagentc.log" | TYPE "%root_disk%:\reagentc.log"
+GOTO SFC_p1
 
+:SFC_p1
 ECHO ******************
 ECHO SFC (part 1)
 SFC /?
@@ -27,8 +53,9 @@ ECHO ***
 SFC.exe /SCANNOW
 ECHO ***
 NOTEPAD.exe "%WINDIR%\Logs\CBS\CBS.log"
+GOTO CHKDSK
 
-
+:CHKDSK
 ECHO ******************
 ECHO CHKDSK
 ENDLOCAL && SETLOCAL ENABLEDELAYEDEXPANSION
@@ -67,7 +94,7 @@ SET labels
 
 ECHO ******************
 ECHO BootRec (WinRE only!)
-@REM Diskpart Assign=Z
+@REM req. Diskpart Assign=Z
 BootRec.exe /ScanOS > "%root_disk%:\BootRec.log" | TYPE "%root_disk%:\BootRec.log"
 ECHO ***
 BootRec.exe /FixMBR /FixBoot /RebuildBCD >> "%root_disk%:\BootRec.log" | TYPE "%root_disk%:\BootRec.log"
