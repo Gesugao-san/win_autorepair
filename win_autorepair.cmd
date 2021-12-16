@@ -37,7 +37,7 @@ ENDLOCAL && SETLOCAL ENABLEDELAYEDEXPANSION
 SET /a count=1
 SET "delimiter=, "
 SET "labels_free=Z Y X W V U T S R Q P O N M L K J I H G F E D C B A "
-FOR /F "skip=1 tokens=1 delims= " %%a IN ('wmic.exe logicaldisk get caption') DO (
+FOR /F "skip=1 tokens=1 delims= " %%a IN ('WMIC.exe LOGICALDISK GET "Caption"') DO (
     @REM Sanitizing newline and non-labels
     @REM https://newbedev.com/how-to-see-if-a-string-contains-a-substring-using-batch
     ECHO [%count%] Detected label "%%a", repairing | FIND ":"
