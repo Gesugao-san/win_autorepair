@@ -21,17 +21,14 @@ ECHO ***
 @REM For PowerShell: Repair-WindowsImage -Online -RestoreHealth
 DISM /?
 ECHO ***
-DISM /Online /Cleanup-image /CheckHealth
+DISM /Online /Cleanup-Image /CheckHealth
 ECHO ***
-DISM /Online /Cleanup-image /ScanHealth
+DISM /Online /Cleanup-Image /ScanHealth
 ECHO ***
-DISM /Online /Cleanup-image /RestoreHealth
+DISM /Online /Cleanup-Image /RestoreHealth
 
 @REM CHKDSK
 ECHO ***
-
-@REM CHKDSK "%SystemDrive%" /F /R /offlinescanandfix
-
 
 ENDLOCAL && SETLOCAL ENABLEDELAYEDEXPANSION
 @REM https://serverfault.com/a/268814
@@ -49,6 +46,18 @@ FOR /F "skip=1 tokens=1 delims= " %%a IN ('wmic logicaldisk get caption') DO (
 )
 SET labels_used=%labels_used:~0,-8%
 SET labels
+
+ECHO ***
+@REM Windows Recovery Environment (WinRE) info
+reagentc /info
+ECHO ***
+reagentc /enable
+
+ECHO ***
+@REM BootRec (WinRE only!)
+BootRec.exe /ScanOS
+ECHO ***
+BootRec.exe /FixMBR /FixBoot /RebuildBCD
 
 ECHO ******************
 ECHO Done working.
