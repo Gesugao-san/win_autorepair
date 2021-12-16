@@ -91,7 +91,9 @@ FOR /F "skip=1 tokens=1 delims= " %%a IN ('WMIC.exe LOGICALDISK GET "Caption"') 
 )
 SET labels_used=%labels_used:~0,-8%
 SET labels
+GOTO BootRec
 
+:BootRec
 ECHO ******************
 ECHO BootRec (WinRE only!)
 @REM req. Diskpart Assign=Z
@@ -99,6 +101,7 @@ BootRec.exe /ScanOS > "%root_disk%:\BootRec.log" | TYPE "%root_disk%:\BootRec.lo
 ECHO ***
 BootRec.exe /FixMBR /FixBoot /RebuildBCD >> "%root_disk%:\BootRec.log" | TYPE "%root_disk%:\BootRec.log"
 
+:END
 ECHO ******************
 ECHO Done working.
 
