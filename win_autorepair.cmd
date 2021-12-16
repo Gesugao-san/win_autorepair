@@ -21,7 +21,7 @@ GOTO WinRE
 
 @REM Can be broken below, passing
 ECHO ******************
-ECHO DiskPart info > "%root_disk%:\DiskPart.log" | TYPE "%root_disk%:\reagentc.log"
+ECHO DiskPart info > "%root_disk%:\DiskPart.log" | TYPE "%root_disk%:\DiskPart.log"
 DISKPART
 LIST DISK
 SELECT DISK 1
