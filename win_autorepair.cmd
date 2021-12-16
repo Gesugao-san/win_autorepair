@@ -13,7 +13,7 @@ GOTO INFO
 ECHO Start working...
 CHCP
 ECHO SystemDrive: "%SystemDrive%", WINDIR: "%WINDIR%"
-ECHO PATH: "%PATH%"
+ECHO PATH: [%PATH%]
 CD /D "%root_path%"
 GOTO DiskPart
 
