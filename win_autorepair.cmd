@@ -15,11 +15,10 @@ CHCP
 ECHO SystemDrive: "%SystemDrive%", WINDIR: "%WINDIR%"
 ECHO PATH: [%PATH%]
 CD /D "%root_path%"
-GOTO DiskPart
+GOTO WinRE
+@REM GOTO DiskPart
 
 :DiskPart
-GOTO WinRE
-
 @REM Can be broken below, passing
 ECHO ******************
 ECHO DiskPart info > "%root_disk%:\DiskPart.log" | TYPE "%root_disk%:\DiskPart.log"
